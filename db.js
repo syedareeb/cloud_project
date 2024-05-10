@@ -97,6 +97,18 @@ async function deleteUser(id) {
   }
 }
 
+async function getUser(id) {
+    try {
+      const result = await sql.query`
+        SELECT * FROM Users
+        WHERE id = ${id};
+      `;
+      return result.recordset;
+    } catch (err) {
+        console.log(err);
+    }
+  }
+
 module.exports = {
   connect,
   createTable,
@@ -104,6 +116,7 @@ module.exports = {
   getUsers,
   updateUser,
   deleteUser,
-  sql
+  sql,
+  getUser
 };
 
