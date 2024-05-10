@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>User Management</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome for icons -->
+<style>
+  /* Reset */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    padding: 20px;
+  }
+
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+  }
+
+  th, td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+  }
+
+  th {
+    background-color: #f5f5f5;
+  }
+
+  td:last-child {
+    text-align: center;
+  }
+
+  .delete-btn {
+    background-color: #f44336;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+
+  .delete-btn:hover {
+    background-color: #d32f2f;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>User Management</h1>
+      <a class="add-user-link" href="create-user.html">Add User</a>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Phone</th>
+          <th>Address</th>
+          <th>Action</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="userList"></tbody>
+    </table>
+  </div>
+
+<script>
+  // Function to fetch and display all users
+  async function fetchUsers() {
+    const response = await fetch('/users');
+    const users = await response.json();
+
+    const userList = document.getElementById('userList');
+    userList.innerHTML = '';
+
+    users.forEach(user => {
+      const row = document.createElement('tr');
+      row.innerHTML = `
+        <td>${user.name}</td>
+        <td>${user.email}</td>
+        <td>${user.phone}</td>
+        <td>${user.address}</td>
+        <td><button class="edit-btn" onclick="editUser(${user.id})"><i class="fas fa-edit"></i> Edit</button></td>
+        <td><button class="delete-btn" onclick="deleteUser(${user.id})"><i class="fas fa-trash"></i> Delete</button></td>
+      `;
+      userList.appendChild(row);
+    });
+  }
+
+  // Function to delete a user
+  async function deleteUser(userId) {
+    const response = await fetch(`/users/${userId}`, {
+      method: 'DELETE'
+    });
+    fetchUsers(); // Refresh user list after deletion
+  }
+
+  // Function to edit a user
+  async function editUser(userId) {
+    window.location.href = '/edit-user.html?id=' + userId;
+  }
+
+  // Initial fetch of users
+  fetchUsers();
+</script>
+</body>
+</html>
