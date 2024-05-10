@@ -1,6 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const { connect, createTable, createUser, getUsers, updateUser, deleteUser } = require('./db');
+const { connect, createTable, createUser, getUsers, updateUser, deleteUser, getUser } = require('./db');
 const path = require('path');
 
 const app = express();
@@ -40,6 +40,12 @@ app.delete('/users/:id', async (req, res) => {
   const { id } = req.params;
   await deleteUser(id);
   res.send('User deleted');
+});
+
+app.get('/user/:id', async (req, res) => {
+  const userId = req.params.id;
+  const user = await getUser(userId);
+  res.json(user);
 });
 
 app.listen(port, () => {
